@@ -65,7 +65,19 @@ pipeline {
                 }
             }
         }
-
+        stage('Maven Package')
+        {
+            steps {
+                sh 'mvn package'
+            }
+        }
+        stage('Sonar Quality Gate')
+        {
+            steps {
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQuality abortPipeline: true, credentialsId: 'sonar'
+            }
+        }
     } 
-
+  }
 } 
