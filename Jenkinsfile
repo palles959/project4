@@ -56,7 +56,8 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv('sonarserver') {
-                    sh """${SCANNER_HOME}/bin/sonar-scanner \
+                    sh """
+                        ${SCANNER_HOME}/bin/sonar-scanner \
                         -Dsonar.organization=palles959 \
                         -Dsonar.projectName=project4 \
                         -Dsonar.projectKey=project4 \
@@ -65,20 +66,22 @@ pipeline {
                 }
             }
         }
-        stage('Maven Package')
-        {
+
+        stage('Maven Package') {
             steps {
                 sh 'mvn package'
             }
         }
-        stage('Sonar Quality Gate')
-        {
+
+        stage('Sonar Quality Gate') {
             steps {
-                timeout(time: 1, unit: 'MINUTES') {
-                    waitForQuality abortPipeline: true, credentialsId: 'sonar'
-                    echo "Sonar Quality Gate Finished"
+                script {
+                    timeout(time: 1, unit: 'MINUTES') {
+                        waitForQualityGate abortPipeline: true, credentialsId: 'sonar'
+                        echo "Sonar Quality Gate Finished"
+                    }
+                }
             }
         }
     } 
-  }
 } 
