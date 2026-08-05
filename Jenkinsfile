@@ -74,6 +74,7 @@ pipeline {
                 sh 'mvn package'
             }
         }
+
         stage('Sonar Quality Gate') {
             steps {
                 script {
@@ -83,12 +84,15 @@ pipeline {
                     }
                 }
             }
-           stage('Docker Build') 
-            { 
-              steps {
-                  echo "Build Docker Image" 
-                  docker.build ("${IMAGE_NAME}:${IMAGE_TAG}")
-             }
         }
-    } 
-} 
+
+        stage('Docker Build') {
+            steps {
+                echo "Build Docker Image"
+                docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+            }
+        }
+
+    } // closes stages
+
+} // closes pipeline
