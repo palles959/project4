@@ -9,14 +9,14 @@ pipeline {
     }
 
     environment {
-        TENANT_ID="ec78375d-0db0-42cf-82a6-2e6403e95936"
+        TENANT_ID="a3bc4ae6-05ef-47f8-8c26-c5ffbe91a1ed"
     }
 
     stages {
         stage('Check Out from Git') 
         {
             steps {
-                git branch: 'prod' , url: 'https://github.com/bkrrajmali/azure-evening-springbootjavapp.git'
+                git branch: 'prod' , url: 'https://github.com/palles959/project4.git'
             }
         }
 
