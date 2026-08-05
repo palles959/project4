@@ -8,6 +8,8 @@ pipeline {
 
     environment {
         TENANT_ID = "a3bc4ae6-05ef-47f8-8c26-c5ffbe91a1ed"
+        IMAGE_NAME = "project4"
+        IMAGE_TAG = "latest"
     }
 
     stages {
@@ -72,7 +74,6 @@ pipeline {
                 sh 'mvn package'
             }
         }
-
         stage('Sonar Quality Gate') {
             steps {
                 script {
@@ -82,6 +83,12 @@ pipeline {
                     }
                 }
             }
+           stage('Docker Build') 
+            { 
+              steps {
+                  echo "Build Docker Image" 
+                  docker.build ("${IMAGE_NAME}:${IMAGE_TAG}")
+             }
         }
     } 
 } 
