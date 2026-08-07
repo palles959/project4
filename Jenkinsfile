@@ -10,6 +10,7 @@ pipeline {
         TENANT_ID = "a3bc4ae6-05ef-47f8-8c26-c5ffbe91a1ed"
         IMAGE_NAME = "project4"
         IMAGE_TAG = "latest"
+        ACR_NAME = "springbootdocker"
     }
 
     stages {
@@ -86,15 +87,29 @@ pipeline {
             }
         }
 
-       stage('Docker Build') {
-          steps {
-              script {
-                echo "Build Docker Image"
-                sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
-              }
-           }
-       }
+        stage('Docker Build') {
+            steps {
+                script {
+                    echo "Build Docker Image"
+                    sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
+                }
+            }
+        }
 
-    } // <-- closes stages
+        stage('Azure Login to ACR') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'azure-acr-spn', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')]) {
+                    script {
+                        echo "Azure Login"
+                        sh '''
+                            az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
+                            az acr login --name $ACR_NAME
+                        '''
+                    }
+                }
+            }
+        }
 
-} // <-- closes pipeline
+    } // closes stages
+
+} // closes pipeline
