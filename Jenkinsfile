@@ -11,6 +11,8 @@ pipeline {
         IMAGE_NAME = "project4"
         IMAGE_TAG = "latest"
         ACR_NAME = "springbootdocker"
+        ACR_LOGIN_SERVER = "springbootdocker.azurecr.io"
+        FULL_IMAGE_NAME = "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
     }
 
     stages {
@@ -102,11 +104,23 @@ pipeline {
                     script {
                         echo "Azure Login"
                         sh '''
-                        az account set --subscription "9e0ead0a-63d0-4b5a-b4c7-4c35d9ece503" 
-                        az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
-                        az acr login --name $ACR_NAME
+                            az account set --subscription "9e0ead0a-63d0-4b5a-b4c7-4c35d9ece503"
+                            az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
+                            az acr login --name $ACR_NAME
                         '''
                     }
+                }
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                script {
+                    echo "Docker Image Push"
+                    sh '''
+                        docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${FULL_IMAGE_NAME}
+                        docker push ${FULL_IMAGE_NAME}
+                    '''
                 }
             }
         }
