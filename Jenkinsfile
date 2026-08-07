@@ -102,8 +102,9 @@ pipeline {
                     script {
                         echo "Azure Login"
                         sh '''
-                            az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
-                            az acr login --name $ACR_NAME
+                        az account set --subscription "9e0ead0a-63d0-4b5a-b4c7-4c35d9ece503" 
+                        az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
+                        az acr login --name $ACR_NAME
                         '''
                     }
                 }
