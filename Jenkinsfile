@@ -22,7 +22,7 @@ pipeline {
 
         stage('Check Out from Git') {
             steps {
-                git branch: 'main', url: 'https://github.com/palles959/project4.git'
+                git branch: 'prod', url: 'https://github.com/palles959/project4.git'
             }
         }
 
